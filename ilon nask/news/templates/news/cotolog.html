@@ -1,0 +1,103 @@
+<html>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+function getCSRFToken() {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith('csrftoken=')) {
+            return cookie.substring('csrftoken='.length, cookie.length);
+        }
+    }
+    return null;
+}
+var data_set={'name':0, 'surname':0, 'email':0};
+function send(a){
+fetch('/handle/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+         'X-CSRFToken': getCSRFToken(),
+    },
+    body: JSON.stringify({'data':data_set, 'function':a}),
+})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // or response.text() depending on your view
+        })
+        .then(data => {
+            data_set=data['out']
+            console.log('Response from Django:', data);
+            // Handle the response as needed
+        })
+        .catch(error => {
+            console.error('Error during fetch:', error);
+        });
+    }
+
+function sendDataToDjango(func, data) {
+    // Data to send
+    var dataToSend = {
+        func: func,
+        data: data
+        // Add more data as needed
+    };
+
+    // AJAX request
+    $.ajax({
+        type: 'POST',
+        url: '/handle_request/',  // Update with the actual URL
+        data: JSON.stringify(dataToSend),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token in the headers
+        },
+        success: function(response) {
+            // Handle the response from the Django view
+            console.log(response);
+            data_set=response;
+        },
+        error: function(error) {
+            // Handle errors
+            console.error('Error:', error);
+        }
+    });
+}
+function access(){
+    var alert='';
+    if (document.getElementById('name').value.length>28) {
+        alert+=' name greater then 28'
+    }
+    if (document.getElementById('surname').value.length>28) {
+        alert+=' surname greater then 28'
+    }
+    if (alert===''){
+        data_set['name']=document.getElementById('name').value;
+        data_set['surname']=document.getElementById('surname').value;
+        data_set['email']=document.getElementById('email').value;
+        send('registrator');
+        setTimeout(function() {
+        window.location.href = "{% url 'main_page' %}?x="+data_set['email'];}, 1000);
+    }
+    var pas = document.getElementById('alert').innerHTML=alert;
+}
+</script>
+<body>
+
+
+    <div style="text-align:center">
+        write your name, surname and password to signup.<br>
+    <form id="myForm">
+    <input placeholder='name' id='name' style="text-align:center"><br>
+    <input placeholder='surname' id='surname' style="text-align:center"><br>
+    <input type="email" id="email" name="email" placeholder='email' style="text-align:center"><br>
+    </form>
+    <button onclick="access()">Access</button>
+    <p id='alert'></p>
+    </div>
+
+</body>
+</html>

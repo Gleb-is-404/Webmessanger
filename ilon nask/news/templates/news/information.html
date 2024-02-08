@@ -1,0 +1,141 @@
+<html>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <head>
+        <title>my first Satana </title>
+        <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: scroll;
+            height: 100%;
+        }
+        .panel {
+            width: 30vw; /* Set the width of each column */
+            box-sizing: border-box; /* Include padding and border in the width */
+            padding: 10px; /* Add some padding for spacing */
+            border: 1px solid #ddd;
+            overflow-y: auto;
+
+        }
+        .window {
+            width: 100vw;
+            height: 50vh; /* Set the width of each column */
+            box-sizing: border-box; /* Include padding and border in the width */
+            padding: 10px; /* Add some padding for spacing */
+            border: 1px solid #ddd;
+            overflow-y: auto;
+
+        }
+        .colored-text {
+            background-color: #000000;
+            color: #ffffff; /* Replace with your preferred color code or name */
+            padding: 2px; /* Optional: Add padding for better visual appearance */
+        }
+        .container {
+            height: 100vh; /* Set the height to your desired value */
+            overflow-y: auto; /* Allow vertical scrolling */
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            width: 48%; /* Set the width of each column */
+            box-sizing: border-box; /* Include padding and border in the width */
+            padding: 10px; /* Add some padding for spacing */
+            border: 1px solid #ddd; /* Add a border for visual separation */
+        }
+    </style>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script>
+        var data={}
+        function send(a){
+        
+fetch('/handle/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+         'X-CSRFToken': getCSRFToken(),
+    },
+    body: JSON.stringify({'data':data_set, 'function':a}),
+})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // or response.text() depending on your view
+        })
+        .then(data => {
+            data_set=data['out']
+            console.log('Response from Django:', data);
+            // Handle the response as needed
+        })
+        .catch(error => {
+            console.error('Error during fetch:', error);
+        });
+    }
+function getCSRFToken() {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith('csrftoken=')) {
+            return cookie.substring('csrftoken='.length, cookie.length);
+        }
+    }
+    return null;
+}
+
+var data_set = {'text':'', 'name':''};
+        function sendDataToDjango(func, data) {
+    // Data to send
+    var dataToSend = {
+        func: func,
+        data: data
+        // Add more data as needed
+    };
+
+    // AJAX request
+    $.ajax({
+        type: 'POST',
+        url: '/handle_request/',  // Update with the actual URL
+        data: JSON.stringify(dataToSend),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token in the headers
+        },
+        success: function(response) {
+            // Handle the response from the Django view
+            data_set=response;
+        },
+        error: function(error) {
+            // Handle errors
+            console.error('Error:', error);
+        }
+    });
+}
+function send_data(){
+    data_set['name']="{{ name|escapejs }}";
+    data_set['text']=document.getElementById('b').value;
+    send('send');
+}
+var refreshInterval = 2000;
+function refresh() {
+            send('chat_loader');
+            document.getElementById('w').innerHTML=data_set['chat_feald'];
+            
+        }
+
+        // Set interval to refresh the page at regular intervals
+        var intervalId = setInterval(refresh, refreshInterval);
+// Call the function when needed
+
+        </script>
+          </script>
+    </head>
+    <body>
+        <div class="window" id='w'>
+        </div>
+        <input size="100" id='b'>
+        <button onclick="send_data()">send</button>
+    </body>
+</html>
