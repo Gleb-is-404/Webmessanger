@@ -9,12 +9,19 @@
             overflow: scroll;
             height: 100%;
         }
+        .tag {
+  position: fixed;
+  background-color: ffffff;
+  border: solid;
+  color: #333; /* Black text color */
+  padding: 5px 10px; /* Padding for content */
+  border-radius: 5px; /* Rounded corners */
+  z-index: 9999; /* Ensure the tag is above other content */
+  display: none; /* Initially hide the tag */
+}
         .panel {
-            width: 30vw; /* Set the width of each column */
             box-sizing: border-box; /* Include padding and border in the width */
-            padding: 10px; /* Add some padding for spacing */
             border: 1px solid #ddd;
-            overflow-y: auto;
 
         }
         .window {
@@ -36,12 +43,11 @@
             overflow-y: auto; /* Allow vertical scrolling */
             display: flex;
             justify-content: space-between;
+
         }
 
         .column {
-            width: 48%; /* Set the width of each column */
             box-sizing: border-box; /* Include padding and border in the width */
-            padding: 10px; /* Add some padding for spacing */
             border: 1px solid #ddd; /* Add a border for visual separation */
         }
     </style>
@@ -49,12 +55,12 @@
         <script>
         var data={}
         function send(a){
-        
+
 fetch('/handle/', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-         'X-CSRFToken': getCSRFToken(),
+         'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
     },
     body: JSON.stringify({'data':data_set, 'function':a}),
 })
@@ -84,7 +90,7 @@ function getCSRFToken() {
     return null;
 }
 
-var data_set = {'text':'', 'name':''};
+var data_set = {'text':'', 'name':'', 'del_id':'', 'mon':''};
         function sendDataToDjango(func, data) {
     // Data to send
     var dataToSend = {
@@ -114,28 +120,95 @@ var data_set = {'text':'', 'name':''};
     });
 }
 function send_data(){
-    data_set['name']="{{ name|escapejs }}";
-    data_set['text']=document.getElementById('b').value;
-    send('send');
+    if (document.getElementById('b').value!==''){
+        data_set['name']="{{ name|escapejs }}";
+        data_set['text']=document.getElementById('b').value;
+        document.getElementById('b').value='';
+        document.getElementById('message_text').innerHTML='';
+        send('deleter');
+        document.getElementById('send').innerHTML='';
+        change('send');
+    }
 }
 var refreshInterval = 2000;
+document.onkeypress = function (e) {
+    e = e || window.event;
+    if (e['key']=='Enter' && !(e.shiftKey)){
+        send_data();
+        setTimeout(function() {change('send'); document.getElementById('send').innerHTML='';}, 100);
+
+    }
+};
+function change_log(x){
+    data_set['del_id']=document.getElementById(x).getAttribute('id');
+    document.getElementById('message_text').innerHTML=document.getElementById(x).innerHTML.substr(document.getElementById(x).innerHTML.indexOf('|')+2, document.getElementById(x).innerHTML.length);
+    document.getElementById('b').value=document.getElementById(x).innerHTML.substr(document.getElementById(x).innerHTML.indexOf('|')+2, document.getElementById(x).innerHTML.length).replace("<br>", "\n");
+
+    //document.getElementById('user').innerHTML='user: '+document.getElementById(x).innerHTML.substr(0, document.getElementById(x).innerHTML.indexOf('-'));
+}
+function change(x){
+    data_set['text']=document.getElementById('b').value; 
+    data_set['mon']=x; 
+    console.log(x);
+    document.getElementById('com').innerHTML=x;
+    document.getElementById('send').innerHTML='X';
+}
 function refresh() {
             send('chat_loader');
             document.getElementById('w').innerHTML=data_set['chat_feald'];
-            
-        }
 
+        }
+document.oncontextmenu = function(){
+}
         // Set interval to refresh the page at regular intervals
         var intervalId = setInterval(refresh, refreshInterval);
 // Call the function when needed
 
+function panel(){
+    var tag = document.getElementById('tag');
+
+        tag.style.left = event.clientX + 'px';
+        tag.style.top = event.clientY + 'px';
+        tag.style.display = 'block'; 
+}
+    document.oncontextmenu = function(event) {
+        event.preventDefault();
+    };
+document.addEventListener('click', function(event){
+    var tag = document.getElementById('tag');
+     tag.style.display = 'none';
+})
         </script>
           </script>
     </head>
     <body>
+        {% csrf_token %}
+        <div id="tag" class="tag">
+            <button style="border: solid;" onclick="change('repost'); document.getElementById('b').value='';" id='repost'>reply</button><br>
+        <button style="border: solid;" onclick="data_set['text']=document.getElementById('b').value; data_set['mon']='delete'; send('deleter'); change('send'); document.getElementById('send').innerHTML=''; document.getElementById('send').innerHTML=''; document.getElementById('b').value=''; document.getElementById('message_text').innerHTML=''"id='delete'>delete</button><br>
+        <button style="border: solid;" onclick="change('change')" id=change>change</button><br>
+        </div>
+        <script>
+        </script>
         <div class="window" id='w'>
         </div>
-        <input size="100" id='b'>
-        <button onclick="send_data()">send</button>
+        <textarea size="100" id='b'></textarea>
+        <button style="border: solid;" onclick="send_data(); setTimeout(function() {change('send'); document.getElementById('send').innerHTML='';}, 100);" id='com'>commit</button>
+        <button onclick="document.getElementById('end').scrollIntoView({behavior: 'smooth'});" style='font-size: 20;'>⬇</button>
+        <div id='message_text' style="border: solid; width: 50vw;"></div>
+        <button style="border: solid;" onclick="change('send'); document.getElementById('send').innerHTML=''; document.getElementById('b').value='';
+        document.getElementById('message_text').innerHTML='';" id='send'></button><br>
+        <script>change('send')</script>
+        <table style="border: solid;">
+            <tr>
+                <td>
+                    <div onclick="document.getElementById('b').value+='👍';">👍</div>
+                    <div onclick="document.getElementById('b').value+='🙁';">🙁</div>
+                    <div onclick="document.getElementById('b').value+='😀';">😀</div>
+                    <div onclick="document.getElementById('b').value+='🙂';">🙂</div>
+                    <div onclick="document.getElementById('b').value+='🤬';">🤬</div>
+                </td>
+            </tr>
+        </table>
     </body>
 </html>

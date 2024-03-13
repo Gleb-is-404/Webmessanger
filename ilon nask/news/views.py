@@ -9,14 +9,14 @@ from .forms import PostForm
 from django.views.generic import DetailView, UpdateView, DeleteView'''
 from django.http import HttpResponse
 # Create your views here.
-import mysql.connector
+import copy
 import json
 import io
 import sys
-for x in list(chat.objects.all()):
-    print(x.text, 'gg')
+
+'''user.objects.all().delete()'''
 # Establish a connection to your MySQL database
-def func_do(inp):
+def func_do(inp, request):
     locals().update(inp['function_exec'])
     original_stdout = sys.stdout
     sys.stdout = open('output.txt', 'w')
@@ -27,30 +27,59 @@ def func_do(inp):
         captured_output = output_file.read()
     inp['text']=captured_output
     return inp
-def data_saver(inp):
+def data_saver(inp, request):
     int_info.objects.create(function_name=inp['function_name'], function_description=inp['function_description'], function_input=inp['function_input'], function_function=inp['function_function'], function_tags=inp['function_tags'])
     '''int_info.objects.create(function_name='ijoj', function_description='jkllk', function_input=['j90', 'jol'], functipython manage.py runserveron_function='jkjkj')'''
     return inp
-def registrator(inp):
+def registrator(inp, request):
     users.objects.create(name=inp['name'], surname=inp['surname'], email_address=inp['email'], points=100)
     '''int_info.objects.create(function_name='ijoj', function_description='jkllk', function_input=['j90', 'jol'], function_function='jkjkj')'''
     return inp
-def chat_loader(inp):
-    inp['chat_feald']=''
-    for x in list(chat.objects.all()):
-        inp['chat_feald']+=f'{x.name}: {x.text}<br>'
+def deleter(inp, request):
+    if inp['mon']=='delete' and chat.objects.filter(id=inp['del_id'])[0].name==request.session['user_data']:
+        chat.objects.filter(id=inp['del_id']).delete()
+    if inp['mon']=='change' and chat.objects.filter(id=inp['del_id'])[0].name==request.session['user_data']:
+        n=chat.objects.filter(id=inp['del_id'])[0]
+        n.text=inp['text']
+        n.save()
+    if inp['mon']=='send':
+        print(inp['text'])
+        chat.objects.create(name=inp['name'], text=inp['text'], like=0)
+    if inp['mon']=='repost':
+        chat.objects.create(name=inp['name'], text=inp['text'], like=inp['del_id'])
     return inp
-def save(inp):
+def chat_loader(inp, request):
+    inp['chat_feald']=''
+    for x in list(chat.objects.all().order_by('id')):
+        n=x.text.replace("\n", "<br>")
+        if x.like==0 or list(chat.objects.filter(id=x.like))==[]:
+            inp['chat_feald']+=f'<button id={x.id} oncontextmenu="panel(); change_log({x.id});" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><div onclick="data_set[\'emo\']=\'{x.id}\';send(\'emotion\');console.log(6)">{len(x.emo)}👍</div><br><br>'
+        else:
+            y=chat.objects.filter(id=x.like)[0]
+            m=y.text.replace("\n", "<br>")
+            inp['chat_feald']+=f'<button style="border:solid; text-align: left;" onclick="document.getElementById({y.id}).scrollIntoView({{behavior:\'smooth\'}})">{y.name}| {m}_</button><b style="font-size: small;">{str(y.create_time)[5:16]}</b><br><b>↪⇾⇾⇾⇾</b><button id={x.id} oncontextmenu="panel(); change_log({x.id})" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><br><br>'
+    inp['chat_feald']+="<div id=end></div>"
+    return inp
+def emotion(inp, request):
+    a = list(chat.objects.filter(id=inp['emo']))[0]
+
+    e = list(a.emo)  # Make a copy of the list
+    if not request.session['user_data'] in e:
+        e.append(request.session['user_data'])
+        a.emo = e  # Update the 'emo' attribute
+        a.save()  # Save the changes to the database
+    return inp
+def save(inp, request):
     if list(user.objects.filter(password=inp['password']))==[]:
         user.objects.create(name=inp['name'], password=inp['password'])
     return inp
-def send(inp):
+def send(inp, request):
     chat.objects.create(name=inp['name'], text=inp['text'], like=0)
     return inp
-function_list={'data_saver':data_saver, 'func_do':func_do, 'save':save, 'registrator':registrator, 'send':send, 'chat_loader':chat_loader}
+function_list={'data_saver':data_saver, 'func_do':func_do, 'save':save, 'registrator':registrator, 'send':send, 'chat_loader':chat_loader, 'deleter':deleter, 'emotion':emotion}
 def handle(request):
     x=json.loads(unquote(request.body))
-    return JsonResponse({'out':function_list[x['function']](x['data'])})
+    return JsonResponse({'out':function_list[x['function']](x['data'], request)})
 def handle_request(request):
     if request.method == 'POST':
 
