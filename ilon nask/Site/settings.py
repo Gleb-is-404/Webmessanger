@@ -76,10 +76,10 @@ WSGI_APPLICATION = 'Site.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jldzbfvc',
-        'USER': 'jldzbfvc',
-        'PASSWORD': 'RI9dc2kV801owFg_tUUlCV08NczhEyVp',
-        'HOST': 'ziggy.db.elephantsql.com',  # or your database host
+        'NAME': 'Glebdata',
+        'USER': 'Gleb',
+        'PASSWORD': 'Glebisnice',
+        'HOST': 'data.c7c6gaoimmvh.eu-north-1.rds.amazonaws.com',  # or your database host
         'PORT': '5432',           # or your database port
     }
 }

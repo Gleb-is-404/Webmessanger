@@ -53,11 +53,11 @@ def chat_loader(inp, request):
     for x in list(chat.objects.all().order_by('id')):
         n=x.text.replace("\n", "<br>")
         if x.like==0 or list(chat.objects.filter(id=x.like))==[]:
-            inp['chat_feald']+=f'<button id={x.id} oncontextmenu="panel(); change_log({x.id});" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><div onclick="data_set[\'emo\']=\'{x.id}\';send(\'emotion\');console.log(6)">{len(x.emo)}👍</div><br><br>'
+            inp['chat_feald']+=f'<button id={x.id} oncontextmenu="panel(); change_log({x.id});" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><div onclick="data_set[\'emo\']=\'{x.id}\';send(\'emotion\');">{len(x.emo)}👍</div><br><br>'
         else:
             y=chat.objects.filter(id=x.like)[0]
             m=y.text.replace("\n", "<br>")
-            inp['chat_feald']+=f'<button style="border:solid; text-align: left;" onclick="document.getElementById({y.id}).scrollIntoView({{behavior:\'smooth\'}})">{y.name}| {m}_</button><b style="font-size: small;">{str(y.create_time)[5:16]}</b><br><b>↪⇾⇾⇾⇾</b><button id={x.id} oncontextmenu="panel(); change_log({x.id})" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><br><br>'
+            inp['chat_feald']+=f'<button style="border:solid; text-align: left;" onclick="document.getElementById({y.id}).scrollIntoView({{behavior:\'smooth\'}})">{y.name}| {m}_</button><b style="font-size: small;">{str(y.create_time)[5:16]}</b><br><b>↪⇾⇾⇾⇾</b><button id={x.id} oncontextmenu="panel(); change_log({x.id})" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><div onclick="data_set[\'emo\']=\'{x.id}\';send(\'emotion\');">{len(x.emo)}👍</div><br><br>'
     inp['chat_feald']+="<div id=end></div>"
     return inp
 def emotion(inp, request):
