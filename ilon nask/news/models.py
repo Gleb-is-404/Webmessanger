@@ -7,6 +7,7 @@ class chat(models.Model):
 	text=models.TextField()
 	like=models.IntegerField()
 	emo = ArrayField(models.CharField(max_length=29), default=list)
+	files = models.FileField(upload_to='uploads/', default='f.txt')
 	class Meta:
 		db_table = 'chat'
 class user(models.Model):
@@ -15,3 +16,7 @@ class user(models.Model):
 	password = models.CharField(max_length=28)
 	class Meta:
 		db_table = 'user'
+class image(models.Model):
+	image = models.BinaryField()
+	class Meta:
+		db_table = 'image'

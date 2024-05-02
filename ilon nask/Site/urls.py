@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from news.views import add_data, signup, handle_request, main_page, signin, handle, chats
 from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('handle/', handle, name='handle'),
     path('handle_request/', handle_request, name='handle_request'),
@@ -26,3 +29,4 @@ urlpatterns = [
 
 
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,3 +1,4 @@
+{% load static %}
 <html>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <head>
@@ -55,14 +56,20 @@
         <script>
         var data={}
         function send(a){
+            var fileInput = document.querySelector('input[type="file"]');
+            var file = fileInput.files[0];
 
+var formData = new FormData();
+data_set['function']=a;
+formData.append('image', file);
+formData.append('data', JSON.stringify(data_set));
+formData.append('function', a);            
 fetch('/handle/', {
     method: 'POST',
     headers: {
-        'Content-Type': 'application/json',
          'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
     },
-    body: JSON.stringify({'data':data_set, 'function':a}),
+    body: formData,
 })
         .then(response => {
             if (!response.ok) {
@@ -90,34 +97,18 @@ function getCSRFToken() {
     return null;
 }
 
-var data_set = {'text':'', 'name':'', 'del_id':'', 'mon':''};
-        function sendDataToDjango(func, data) {
-    // Data to send
-    var dataToSend = {
-        func: func,
-        data: data
-        // Add more data as needed
-    };
+var data_set = {'text':'', 'name':'', 'del_id':'', 'mon':'', 'file':''};
+function file_reader() {
 
-    // AJAX request
-    $.ajax({
-        type: 'POST',
-        url: '/handle_request/',  // Update with the actual URL
-        data: JSON.stringify(dataToSend),
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token in the headers
-        },
-        success: function(response) {
-            // Handle the response from the Django view
-            data_set=response;
-        },
-        error: function(error) {
-            // Handle errors
-            console.error('Error:', error);
-        }
-    });
+
+    var fileInput = document.getElementById('fileget');
+            var file = fileInput.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('image', file);
+                data_set['file']=formData;
+                
+            }
 }
 function send_data(){
     if (document.getElementById('b').value!==''){
@@ -125,6 +116,8 @@ function send_data(){
         data_set['text']=document.getElementById('b').value;
         document.getElementById('b').value='';
         document.getElementById('message_text').innerHTML='';
+        console.log(data_set['file'], 88);
+
         send('deleter');
         document.getElementById('send').innerHTML='';
         change('send');
@@ -135,7 +128,7 @@ document.onkeypress = function (e) {
     e = e || window.event;
     if (e['key']=='Enter' && !(e.shiftKey)){
         send_data();
-        setTimeout(function() {change('send'); document.getElementById('send').innerHTML='';}, 100);
+        setTimeout(function() {change('send'); document.getElementById('send').innerHTML='';}, 2000);
 
     }
 };
@@ -154,8 +147,11 @@ function change(x){
     document.getElementById('send').innerHTML='X';
 }
 function refresh() {
+            //data_set['file'] = "jjj";
             send('chat_loader');
             document.getElementById('w').innerHTML=data_set['chat_feald'];
+            
+
 
         }
 document.oncontextmenu = function(){
@@ -194,6 +190,10 @@ document.addEventListener('click', function(event){
         </div>
         <textarea size="100" id='b'></textarea>
         <button style="border: solid;" onclick="send_data(); setTimeout(function() {change('send'); document.getElementById('send').innerHTML='';}, 100);" id='com'>commit</button>
+        <form id="imageForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image">
+        </form>
         <button onclick="document.getElementById('end').scrollIntoView({behavior: 'smooth'});" style='font-size: 20;'>⬇</button>
         <div id='message_text' style="border: solid; width: 50vw;"></div>
         <button style="border: solid;" onclick="change('send'); document.getElementById('send').innerHTML=''; document.getElementById('b').value='';
@@ -210,5 +210,6 @@ document.addEventListener('click', function(event){
                 </td>
             </tr>
         </table>
+        
     </body>
 </html>
