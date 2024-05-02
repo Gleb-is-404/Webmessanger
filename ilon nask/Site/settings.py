@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ew7ams(xrzc9qpd!pfn2n7u_0(cvgocc5z!0*(itp$6_!jqo&&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # Application definition

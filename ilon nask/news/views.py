@@ -66,6 +66,7 @@ def chat_loader(inp, request):
             m=y.text.replace("\n", "<br>")
             inp['chat_feald']+=f'<button style="border:solid; text-align: left;" onclick="document.getElementById({y.id}).scrollIntoView({{behavior:\'smooth\'}})">{y.name}| {m}_</button><b style="font-size: small;">{str(y.create_time)[5:16]}</b><br><b>↪⇾⇾⇾⇾</b><button id={x.id} oncontextmenu="panel(); change_log({x.id})" style="text-align: left;">{x.name}| {n}</button><b style="font-size: small;">{str(x.create_time)[5:16]}</b><div onclick="data_set[\'emo\']=\'{x.id}\';send(\'emotion\');">{len(x.emo)}👍</div><br>'
         inp['chat_feald']+=f'<img src="/media/{x.files}" alt="Image" width="70vw" height="70vw"><br>'
+        inp['chat_feald']+=f'<a href="/media/{x.files}" download="{x.files}">{x.files}</a><br>'
     inp['chat_feald']+="<div id=end></div>"
     return inp
 def emotion(inp, request):
