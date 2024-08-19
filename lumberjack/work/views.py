@@ -15,3 +15,14 @@ import io
 import sys
 def first_page(request):
     return render(request, 'html/gl.html')
+def robots_txt(request):
+    lines = [
+        "User-Agent: *",
+        "Disallow: /admin/",
+        "Disallow: /private-messages/",
+        "Allow: /forum/",
+        "Allow: /chat/",
+        "Sitemap: https://yourdomain.com/sitemap.xml",  # If you have a sitemap
+        # Add more rules as needed
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
