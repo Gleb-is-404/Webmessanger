@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from work.views import first_page
+from work.views import first_page, robots_txt
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lumber/', first_page),
+    path('lumber_jack_site/', first_page),
+    path('robots.txt', robots_txt),
 ]
+
