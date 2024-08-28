@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+		input{
+			font-family: cursive ;
+			padding: 8px;
+			padding-left: 10px;
+            background-color: #f8f8ff; /* Soft White */
+            border-radius: 8px;
+		}
+		.colu{
+			font-family: cursive ;
+			padding: 2px;
+            background-color: #f8f8ff; /* Soft White */
+            border-radius: 8px;
+		}
+	</style>
+</head>
+<body style="background-color: #87CEEB; font-family: cursive; gap: 4px;">
+<form method="post" >
+	{% csrf_token %}
+	name.<br>
+	<input type="text" id="name" name="name" placeholder="name"><br>
+	surname.<br>
+	<input type="text" id="surname" name="surname" placeholder="surname"><br>
+	age.<br>
+	<input type="text" id="age" name="age" placeholder="age"><br>
+	gender.<br>
+	<input type="text" id="gender" name="gender" placeholder="gender"><br>
+	1.	How often do you meet with your friends?<br>
+	<input type="text" id="1" name="1"><br>
+	2.	What are you doing with your friends mostly?<br>
+	<input type="text" id="2" name="2"><br>
+	3.	How much friends do you have?<br>
+	<input type="text" id="3" name="3"><br>
+	4.	Do you prefer spend times with your Family or with your Friends?<br>
+	<input type="text" id="4" name="4"><br>
+	5.	What kind of social activity do you enjoy at most?<br>
+	<input type="text" id="5" name="5"><br>
+	6.	Do you prefer online or offline interaction?<br>
+	<input type="text" id="6" name="6"><br>
+	7.	How do you see your role within your social circles?<br>
+	<input type="text" id="7" name="7"><br>
+	8.	How strong do you trust your friends?<br>
+	<input type="text" id="8" name="8"><br>
+	9.	How easy to you start new social connections?<br>
+	<input type="text" id="9" name="9"><br>
+	10.	How strong are you ready to spontaneous travel?<br>
+	<input type="text" id="10" name="10"><br>
+	11.	What is your favorite movie genre?<br>
+	<input type="text" id="11" name="11"><br>
+	12.	How do you spend your time at most?<br>
+	<input type="text" id="12" name="12"><br>
+	13.	What is/was your favorite school subject?<br>
+	<input type="text" id="13" name="13"><br>
+	14.	How much do you love participate in social interactions?<br>
+	<input type="text" id="14" name="14"><br>
+	15.	How do you relieve stress?<br>
+	<input type="text" id="15" name="15"><br>
+	16.	What social media platfor did you use at most?<br>
+	<input type="text" id="16" name="16"><br>
+	17.	How much hours per day do you spend in your favorite social media platform?<br>
+	<input type="text" id="17" name="17"><br>
+	18.	What is your favorite book/movie?<br>
+	<input type="text" id="18" name="18"><br>
+	19.	What are your plans for future career?<br>
+	<input type="text" id="19" name="19"><br>
+	20.	Which your family member most close to you?<br>
+	<input type="text" id="20" name="20"><br>
+	21.	How can you classify your character (Choleric, Pragmatic, Sanguinis, Phlegmatic)?<br>
+	<input type="text" id="21" name="21"><br>
+	22.	What genre of music do you prefer?<br>
+	<input type="text" id="22" name="22"><br>
+	23.	What do you prefer online education, offline education or self-education?<br>
+	<input type="text" id="23" name="23"><br>
+	<br>
+	<button type="submit" class="colu">submit</button>
+</form>
+</body>
+</html>

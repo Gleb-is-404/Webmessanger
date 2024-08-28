@@ -4,10 +4,36 @@
 	<meta charset="utf-8">
 	<meta name="description" content="Join the Lumberjack Forum, a community for lumberjacks to discuss, share tips, and connect.">
 	<title>site for dancing lumberjack . dance with jack .</title>
+	<style>
+		td{
+			font-family: cursive ;
+			padding: 8px;
+            background-color: #f8f8ff; /* Soft White */
+            border-radius: 8px;
+		}
+		.con{
+			font-family: cursive ;
+			padding: 8px;
+            background-color: #f8f8ff; /* Soft White */
+            border-radius: 8px;
+		}
+	</style>
 </head>
 
-<body>
+<body style="background-color: #87CEEB; font-family: cursive; gap: 4px;">
 <h1>Welcome to the Lumberjack Forum</h1>
 <h2>Discuss Lumberjack Tools, Techniques, and More</h2>
+<br>
+<table style="width: 9500px;">
+<tr class="con">
+	 <td>name <td>surname <td>age <td>gender <td>1.	How often do you meet with your friends?<td>2.	What are you doing with your friends mostly?<td>3.	How much friends do you have?<td>4.	Do you prefer spend times with your Family or with your Friends?<td>5.	What kind of social activity do you enjoy at most?<td>6.	Do you prefer online or offline interaction?<td>7.	How do you see your role within your social circles?<td>8.	How strong do you trust your friends?<td>9.	How easy to you start new social connections?<td>10.	How strong are you ready to spontaneous travel?<td>11.	What is your favorite movie genre?<td>12.	How do you spend your time at most?<td>13.	What is/was your favorite school subject?<td>14.	How much do you love participate in social interactions?<td>15.	How do you relieve stress?<td>16.	What social media platfor did you use at most?<td>17.	How much hours per day do you spend in your favorite social media platform?<td>18.	What is your favorite book/movie?<td>19.	What are your plans for future career?<td>20.	Which your family member most close to you?<td>21.	How can you classify your character (Choleric, Pragmatic, Sanguinis, Phlegmatic)?<td>22.	What genre of music do you prefer?<td>23.	What do you prefer online education, offline education or self-education?</td>
+</tr>
+{% for element in data %}
+<tr class="con">
+	 <td>{{element.name}} <td>{{element.surname}} <td>{{element.age}} <td>{{element.gender}} <td>{{element.n1}} <td>{{element.n2}} <td>{{element.n3}} <td>{{element.n4}} <td>{{element.n5}} <td>{{element.n6}} <td>{{element.n7}} <td>{{element.n8}} <td>{{element.n9}} <td>{{element.n10}} <td>{{element.n11}} <td>{{element.n12}} <td>{{element.n13}} <td>{{element.n14}} <td>{{element.n15}} <td>{{element.n16}} <td>{{element.n17}} <td>{{element.n18}} <td>{{element.n19}} <td>{{element.n20}} <td>{{element.n21}} <td>{{element.n22}} <td>{{element.n23}}</td>
+</tr>
+{% endfor %}
+
+</table>
 </body>
 </html>
